@@ -32,7 +32,7 @@ export const StaffList: React.FC<StaffListProps> = ({ staffs }) => {
                   >
                     <div className="w-16 h-16 rounded-full border-2 border-white shadow-lg overflow-hidden bg-white">
                       <img
-                        src={staff.image}
+                        src="./playerclub.png"
                         alt={`${staff.prenom} ${staff.nom}`}
                         className="w-full h-full object-cover"
                       />
