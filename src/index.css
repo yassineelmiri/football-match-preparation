@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* CSS pour référencer l'image */
+.bg-field {
+    background-image: url('../public/field-lines.png');
+    background-size: cover;
+    background-position: center;
+  }
+  
