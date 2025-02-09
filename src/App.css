@@ -1,0 +1,11 @@
+.draggable-item {
+  transition: background-color 0.2s ease;
+}
+
+.draggable-item:hover {
+  background-color: #f3f4f6;
+}
+
+.draggable-item:active {
+  background-color: #e5e7eb;
+}
