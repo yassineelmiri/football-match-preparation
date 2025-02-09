@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { useTeamStore } from "../store/teamStore";
 import { Player } from "../types";
 
-Modal.setAppElement("#root"); // Pour éviter des erreurs d'accessibilité
+Modal.setAppElement("#root");
 
 interface FootballFieldProps {
   formation: string;
@@ -15,19 +15,16 @@ export const FootballField: React.FC<FootballFieldProps> = ({ formation }) => {
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
 
-  // Charger les joueurs depuis localStorage
   useEffect(() => {
     const storedPlayers = JSON.parse(localStorage.getItem("players") || "[]");
     setPlayers(storedPlayers);
   }, []);
 
-  // Ouvrir le modal pour sélectionner un joueur
   const handleOpenModal = (positionId: string) => {
     setSelectedPosition(positionId);
     setModalIsOpen(true);
   };
 
-  // Sélectionner un joueur et l'afficher sur le terrain
   const handleSelectPlayer = (player: Player) => {
     if (selectedPosition) {
       setFieldPlayer(selectedPosition, player);
@@ -35,7 +32,6 @@ export const FootballField: React.FC<FootballFieldProps> = ({ formation }) => {
     }
   };
 
-  // Définir les positions en fonction de la formation
   const formations = {
     "4-3-3": [
       { id: "gk", nom: "Gardien", x: 50, y: 90 },
@@ -67,50 +63,50 @@ export const FootballField: React.FC<FootballFieldProps> = ({ formation }) => {
   const currentFormation = formations[formation as keyof typeof formations];
 
   return (
-    <div className="relative w-full h-[600px] bg-field rounded-lg shadow-lg p-4">
-      <h2 className="text-white text-xl font-bold text-center mb-4">Terrain</h2>
+    <div className="relative w-full h-[600px] bg-field rounded-lg shadow-lg p-4 overflow-hidden">
+      <h2 className="text-white text-2xl font-bold text-center mb-6">Terrain de Football</h2>
 
-      {/* Affichage des formations sur le terrain */}
       {currentFormation.map((pos) => (
         <div
           key={pos.id}
           onClick={() => handleOpenModal(pos.id)}
-          className="absolute w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer"
+          className="absolute w-16 h-16 bg-white rounded-full flex items-center justify-center cursor-pointer shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110"
           style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: "translate(-50%, -50%)" }}
         >
           {fieldPlayers[pos.id] ? (
-            <div className="p-2 bg-blue-500 text-white rounded-full text-center text-xs">
+            <div className="p-2 bg-blue-500 text-white rounded-full text-center text-xs font-medium">
               {fieldPlayers[pos.id]!.prenom}
             </div>
           ) : (
-            <span className="text-xs text-gray-600">{pos.nom}</span>
+            <span className="text-xs text-gray-600 font-medium">{pos.nom}</span>
           )}
         </div>
       ))}
 
-      {/* Modal pour sélectionner un joueur */}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         contentLabel="Sélectionner un joueur"
-        className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto mt-20"
+        className="bg-white p-6 rounded-lg shadow-2xl max-w-md mx-auto mt-20 transform transition-all duration-300 ease-in-out"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
       >
-        <h2 className="text-lg font-bold mb-4">Choisir un joueur</h2>
-        <ul>
+        <h2 className="text-xl font-bold mb-4 text-gray-800">Choisir un joueur</h2>
+        <ul className="space-y-2">
           {players.map((player) => (
             <li
               key={player.id}
               onClick={() => handleSelectPlayer(player)}
-              className="p-2 border-b hover:bg-gray-200 cursor-pointer"
+              className="p-3 border-b border-gray-200 hover:bg-gray-100 cursor-pointer transition-all duration-200 rounded-lg"
             >
-              {player.prenom} {player.nom}
+              <span className="text-gray-700 font-medium">
+                {player.prenom} {player.nom}
+              </span>
             </li>
           ))}
         </ul>
         <button
           onClick={() => setModalIsOpen(false)}
-          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+          className="mt-4 px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200"
         >
           Annuler
         </button>
