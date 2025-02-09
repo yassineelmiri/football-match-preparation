@@ -28,11 +28,11 @@ const mockData = {
     {
       nom: "safa",
       prenom: "dawi",
-      id: 1823,
+      id: 1824,
       equipe_id: 9,
       num_shirt: "0",
       role: "Player",
-      licenceNumber: "106PMMW08",
+      licenceNumber: "106PMMW09",
       category: "U17",
       dateNaissance: "2008-08-18",
       nationality: "Maroc",
@@ -43,11 +43,11 @@ const mockData = {
     {
       nom: "yassine",
       prenom: "MARCUS",
-      id: 1823,
+      id: 1825,
       equipe_id: 9,
       num_shirt: "0",
       role: "Player",
-      licenceNumber: "106PMMW08",
+      licenceNumber: "106PMMW10",
       category: "U17",
       dateNaissance: "2008-08-18",
       nationality: "Maroc",
@@ -67,14 +67,14 @@ const mockData = {
       dateNaissance: "2008-10-05",
       nationality: "Maroc",
       image: "http://localhost:3000/uploads/profil-default.jpg"
-    }
-    , {
+    },
+    {
       nom: "AHMED",
       prenom: "ELALAOUI",
-      id: 2105,
+      id: 2106,
       equipe_id: 9,
       role: "COACH",
-      licenceNumber: "128PLWW08",
+      licenceNumber: "128PLWW09",
       dateNaissance: "2008-10-05",
       nationality: "Maroc",
       image: "http://localhost:3000/uploads/profil-default.jpg"
@@ -90,11 +90,10 @@ function App() {
     setStaffs,
     setFieldPlayer,
     setSubstitute,
-    removeSubstitute,
     setStaffMember,
   } = useTeamStore();
 
-  const [formation, setFormation] = useState("4-3-3"); // Formation par défaut
+  const [formation, setFormation] = useState("4-3-3");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   React.useEffect(() => {
@@ -113,9 +112,18 @@ function App() {
   }, [setPlayers, setStaffs]);
 
   const handleDragEnd = (result: DropResult) => {
-    const { source, destination, draggableId } = result;
+    const { destination, source, draggableId } = result;
 
     if (!destination) return;
+
+    if (source.droppableId === 'playerList' && destination.droppableId === 'playerList') {
+      const reorderedPlayers = Array.from(players);
+      const [movedPlayer] = reorderedPlayers.splice(source.index, 1);
+      reorderedPlayers.splice(destination.index, 0, movedPlayer);
+      setPlayers(reorderedPlayers);
+      localStorage.setItem('players', JSON.stringify(reorderedPlayers));
+      return;
+    }
 
     const player = players.find((p: Player) => p.id.toString() === draggableId);
     const staff = staffs.find((s: Staff) => s.id.toString() === draggableId);
@@ -149,6 +157,7 @@ function App() {
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="min-h-screen bg-[#f8fafc] p-6">
+        {/* Header */}
         <header className="flex items-center justify-between mb-8 bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-4">
             <button className="p-2 bg-blue-500 rounded-full hover:bg-blue-600 transition-colors">
@@ -168,7 +177,9 @@ function App() {
           </button>
         </header>
 
+        {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Player List */}
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-gray-800">Effectif</h2>
@@ -194,6 +205,7 @@ function App() {
             <PlayerList players={players} />
           </div>
 
+          {/* Composition */}
           <div>
             <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
               <div className="flex items-center justify-between mb-6">
@@ -243,7 +255,7 @@ function App() {
           </div>
         </div>
 
-        {/* Ajoutez le modal ici */}
+        {/* Add Player Modal */}
         <AddPlayerModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
