@@ -29,8 +29,8 @@ export interface Staff {
 export interface TeamData {
   Players: [
     {
-      nom: "walid",
-      prenom: "MARCUS",
+      nom: "yassine",
+      prenom: "bono",
       id: 1823,
       equipe_id: 9,
       num_shirt: "0",
@@ -44,8 +44,8 @@ export interface TeamData {
       shirtNumber: "0"
     },
     {
-      nom: "yassine",
-      prenom: "MARCUS",
+      nom: "Sofyan ",
+      prenom: "Amrabat",
       id: 1823,
       equipe_id: 9,
       num_shirt: "0",
@@ -61,8 +61,8 @@ export interface TeamData {
   ],
   staffs: [
     {
-      nom: "yassoine",
-      prenom: "ELALAOUI",
+      nom: "Oussama ",
+      prenom: "Targhalline",
       id: 2105,
       equipe_id: 9,
       role: "COACH",
@@ -71,7 +71,7 @@ export interface TeamData {
       nationality: "Maroc",
       image: "http://localhost:3000/uploads/profil-default.jpg"
     }
-    ,{
+    , {
       nom: "AHMED",
       prenom: "ELALAOUI",
       id: 2105,
