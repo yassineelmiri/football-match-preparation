@@ -35,11 +35,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
   const handleDragEnd = (result: DropResult) => {
     const { destination, source } = result;
 
-    if (!destination) {
-      return;
-    }
-
-    if (destination.index === source.index) {
+    if (!destination || destination.index === source.index) {
       return;
     }
 
@@ -54,6 +50,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="bg-white rounded-lg shadow">
+        {/* En-tête du tableau */}
         <div className="grid grid-cols-6 bg-blue-600 text-white p-3 rounded-t-lg">
           <div>NOM COMPLET</div>
           <div>FONCTION</div>
@@ -63,6 +60,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
           <div>ACTIONS</div>
         </div>
 
+        {/* Liste des joueurs */}
         <Droppable droppableId="playerList">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps} className="bg-white">
@@ -75,24 +73,43 @@ export const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
                       {...provided.dragHandleProps}
                       className="grid grid-cols-6 p-3 border-b hover:bg-gray-50"
                     >
+                      {/* Nom complet */}
                       <div className="flex items-center gap-2">
-                        <img src="./playerimage.png" alt={`${player.prenom} ${player.nom}`} className="w-8 h-8 rounded-full" />
+                        <img
+                          src={player.image}
+                          alt={`${player.prenom} ${player.nom}`}
+                          className="w-8 h-8 rounded-full"
+                        />
                         <span>{`${player.prenom} ${player.nom}`}</span>
                       </div>
+
+                      {/* Rôle */}
                       <div>{player.role}</div>
+
+                      {/* Numéro de maillot */}
                       <div>{player.num_shirt}</div>
+
+                      {/* Numéro de licence */}
                       <div>{player.licenceNumber}</div>
-                      <div className="text-red-500">Non convoqué</div>
+
+                      {/* Statut convoqué */}
+                      <div className={player.convoque ? 'text-green-500' : 'text-red-500'}>
+                        {player.convoque ? 'Oui' : 'Non'}
+                      </div>
+
+                      {/* Actions */}
                       <div className="flex items-center gap-4">
-                        <button onClick={() => handleUpdatePlayer(player)} className="text-blue-500 hover:text-blue-700">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                          </svg>
+                        <button
+                          onClick={() => handleUpdatePlayer(player)}
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          ✏️
                         </button>
-                        <button onClick={() => handleDeletePlayer(player.id)} className="text-red-500 hover:text-red-700">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                          </svg>
+                        <button
+                          onClick={() => handleDeletePlayer(player.id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          🗑️
                         </button>
                       </div>
                     </div>
@@ -104,7 +121,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
           )}
         </Droppable>
 
-        {/* Update Modal */}
+        {/* Modal de modification */}
         {selectedPlayer && (
           <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -115,38 +132,72 @@ export const PlayerList: React.FC<PlayerListProps> = ({ players }) => {
                   handleSave(selectedPlayer);
                 }}
               >
+                {/* Nom */}
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700">Nom</label>
                   <input
                     type="text"
                     value={selectedPlayer.nom}
-                    onChange={(e) => setSelectedPlayer({ ...selectedPlayer, nom: e.target.value })}
+                    onChange={(e) =>
+                      setSelectedPlayer({ ...selectedPlayer, nom: e.target.value })
+                    }
                     className="w-full p-2 border rounded"
                     required
                   />
                 </div>
+
+                {/* Prénom */}
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700">Prénom</label>
                   <input
                     type="text"
                     value={selectedPlayer.prenom}
-                    onChange={(e) => setSelectedPlayer({ ...selectedPlayer, prenom: e.target.value })}
+                    onChange={(e) =>
+                      setSelectedPlayer({ ...selectedPlayer, prenom: e.target.value })
+                    }
                     className="w-full p-2 border rounded"
                     required
                   />
                 </div>
+
+                {/* Numéro de maillot */}
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-gray-700">Numéro de maillot</label>
                   <input
-                    type="number"
+                    type="text"
                     value={selectedPlayer.num_shirt}
-                    onChange={(e) => setSelectedPlayer({ ...selectedPlayer, num_shirt: e.target.value })}
+                    onChange={(e) =>
+                      setSelectedPlayer({ ...selectedPlayer, num_shirt: e.target.value })
+                    }
                     className="w-full p-2 border rounded"
                     required
                   />
                 </div>
+
+                {/* Statut convoqué */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">Convoqué</label>
+                  <select
+                    value={selectedPlayer.convoque ? 'oui' : 'non'}
+                    onChange={(e) =>
+                      setSelectedPlayer({
+                        ...selectedPlayer,
+                        convoque: e.target.value === 'oui',
+                      })
+                    }
+                    className="w-full p-2 border rounded"
+                  >
+                    <option value="oui">Oui</option>
+                    <option value="non">Non</option>
+                  </select>
+                </div>
+                {/* Boutons */}
                 <div className="flex justify-end gap-2">
-                  <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-300 rounded">
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="px-4 py-2 bg-gray-300 rounded"
+                  >
                     Annuler
                   </button>
                   <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
