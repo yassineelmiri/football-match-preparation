@@ -40,7 +40,7 @@ export const FootballField: React.FC<FootballFieldProps> = ({ formation }) => {
   };
 
   const handleDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId } = result;
+    const { destination, draggableId } = result;
 
     if (!destination) return;
 
