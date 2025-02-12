@@ -9,6 +9,7 @@ export interface Player {
   category: string;
   dateNaissance: string;
   nationality: string;
+  convoque: boolean;
   image: string;
   post: string | null;
   shirtNumber: string;
@@ -39,6 +40,7 @@ export interface TeamData {
       category: "U17",
       dateNaissance: "2008-08-18",
       nationality: "Maroc",
+      convoque: "non",
       image: "http://localhost:3000/uploads/profil-default.jpg",
       post: null,
       shirtNumber: "0"
@@ -54,6 +56,7 @@ export interface TeamData {
       category: "U17",
       dateNaissance: "2008-08-18",
       nationality: "Maroc",
+      convoque: "non",
       image: "http://localhost:3000/uploads/profil-default.jpg",
       post: null,
       shirtNumber: "0"
