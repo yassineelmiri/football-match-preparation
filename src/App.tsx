@@ -21,6 +21,7 @@ const mockData = {
       category: "U17",
       dateNaissance: "2008-08-18",
       nationality: "Maroc",
+      convoque: false,
       image: "http://localhost:3000/uploads/profil-default.jpg",
       post: null,
       shirtNumber: "0"
@@ -36,6 +37,7 @@ const mockData = {
       category: "U17",
       dateNaissance: "2008-08-18",
       nationality: "Maroc",
+      convoque: false,
       image: "http://localhost:3000/uploads/profil-default.jpg",
       post: null,
       shirtNumber: "0"
@@ -51,6 +53,7 @@ const mockData = {
       category: "U17",
       dateNaissance: "2008-08-18",
       nationality: "Maroc",
+      convoque: false,
       image: "http://localhost:3000/uploads/profil-default.jpg",
       post: null,
       shirtNumber: "0"
@@ -66,6 +69,7 @@ const mockData = {
       licenceNumber: "128PLWW08",
       dateNaissance: "2008-10-05",
       nationality: "Maroc",
+      convoque: false,
       image: "http://localhost:3000/uploads/profil-default.jpg"
     },
     {
@@ -77,6 +81,7 @@ const mockData = {
       licenceNumber: "128PLWW09",
       dateNaissance: "2008-10-05",
       nationality: "Maroc",
+      convoque: false,
       image: "http://localhost:3000/uploads/profil-default.jpg"
     }
   ]
@@ -92,10 +97,14 @@ function App() {
     setSubstitute,
     setStaffMember,
   } = useTeamStore();
+  const [selectedStaffs, setSelectedStaffs] = useState<Player[]>([]);
 
   const [formation, setFormation] = useState("4-3-3");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSelectStaff = (staff: Player) => {
+    setSelectedStaffs((prev) => [...prev, staff]);
+  };
   React.useEffect(() => {
     const storedPlayers = localStorage.getItem('players');
     const storedStaffs = localStorage.getItem('staffs');
@@ -154,6 +163,15 @@ function App() {
     setFormation(e.target.value);
   };
 
+  const filteredPlayers = players.filter((player) =>
+    player.nom.toLowerCase().includes(searchTerm)
+  );
+  const handleClearField = () => {
+    setFieldPlayer("position", {} as Player);
+  };
+  const handlePrint = () => {
+    window.print();
+  };
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="min-h-screen bg-[#f8fafc] p-6">
@@ -172,7 +190,10 @@ function App() {
               <span className="text-xl font-semibold text-gray-800">MRNE</span>
             </div>
           </div>
-          <button className="px-6 py-2.5 bg-emerald-400 text-white rounded-lg hover:bg-emerald-500 transition-colors font-medium">
+          <button
+            onClick={handlePrint}
+            className="px-6 py-2.5 bg-emerald-400 text-white rounded-lg hover:bg-emerald-500 transition-colors font-medium"
+          >
             Valider la composition
           </button>
         </header>
@@ -187,9 +208,12 @@ function App() {
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Nom ou licence"
+                    placeholder="Rechercher par nom"
                     className="pl-4 pr-10 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
                   />
+
                   <svg className="w-5 h-5 text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
@@ -202,7 +226,7 @@ function App() {
                 </button>
               </div>
             </div>
-            <PlayerList players={players} />
+            <PlayerList players={filteredPlayers} />
           </div>
 
           {/* Composition */}
@@ -243,15 +267,19 @@ function App() {
                 <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                   Enregistrer
                 </button>
-                <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                  Vider
+                <button
+                  onClick={handleClearField}
+                  className="px-6 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                >
+                  Vider le terrain
                 </button>
+
               </div>
             </div>
 
             <FootballField formation={formation} />
             <SubstitutesBench />
-            <StaffList staffs={staffs} />
+            <StaffList staffs={selectedStaffs} onSelectStaff={handleSelectStaff} />
           </div>
         </div>
 
